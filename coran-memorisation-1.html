@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juz' Amma — Al-Minshawy</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#c9a96e; --gold2:rgba(201,169,110,0.13);
+  --bg:#0d1117; --surface:rgba(255,255,255,0.025);
+  --border:rgba(201,169,110,0.15); --text:#e8dcc8;
+  --dim:#8a7a60; --faint:#4a3a28; --green:#4caf50;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(ellipse at 20% 0%,#160824,#0d1117 55%,#091422);min-height:100vh;font-family:'Lato',sans-serif;font-weight:300;color:var(--text);}
+.bg{position:fixed;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a96e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.wrap{max-width:700px;margin:0 auto;padding:0 16px 100px;position:relative;z-index:1;}
+header{text-align:center;padding:32px 0 16px;}
+.basmala{font-family:'Amiri',serif;font-size:32px;color:var(--gold);letter-spacing:6px;margin-bottom:6px;}
+h1{font-size:10px;letter-spacing:7px;text-transform:uppercase;color:var(--gold);font-weight:400;}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.badge{background:rgba(201,169,110,0.07);border:1px solid rgba(201,169,110,0.18);border-radius:20px;padding:3px 12px;font-size:10px;color:var(--dim);}
+.badge.g{color:var(--gold);}
+nav{display:flex;gap:6px;justify-content:center;margin:16px 0 22px;flex-wrap:wrap;}
+.nb{background:transparent;border:1px solid rgba(201,169,110,0.2);color:var(--dim);padding:7px 16px;border-radius:4px;cursor:pointer;font-size:11px;letter-spacing:2px;font-family:'Lato',sans-serif;transition:all .2s;}
+.nb.active{background:var(--gold2);border-color:var(--gold);color:var(--gold);}
+/* surah list */
+.si{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;transition:all .2s;cursor:pointer;}
+.si:hover{background:rgba(201,169,110,0.05);}
+.si.playing{background:rgba(201,169,110,0.07);border-color:rgba(201,169,110,0.45);}
+.si.na{opacity:.35;cursor:default;}
+.snum{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:rgba(201,169,110,0.1);border-radius:50%;font-size:10px;color:var(--gold);flex-shrink:0;}
+.sinfo{flex:1;}
+.sname{font-size:13px;}
+.ssub{font-size:10px;color:var(--faint);letter-spacing:.5px;margin-top:2px;}
+.sar{font-family:'Amiri',serif;font-size:17px;color:var(--gold);direction:rtl;flex-shrink:0;}
+.pmini{text-align:right;min-width:40px;}
+.pmini span{font-size:10px;color:var(--gold);display:block;margin-bottom:3px;}
+.pmini.done span{color:var(--green);}
+.pb{width:40px;height:2px;background:rgba(255,255,255,0.07);border-radius:1px;}
+.pf{height:100%;background:var(--gold);border-radius:1px;transition:width .4s;}
+.pf.done{background:var(--green);}
+.plbtn{width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(201,169,110,0.25);color:rgba(201,169,110,0.45);font-size:11px;flex-shrink:0;transition:all .2s;font-family:inherit;}
+.plbtn.active{background:var(--gold2);border-color:var(--gold);color:var(--gold);}
+.plbtn.lg{width:32px;height:32px;font-size:13px;}
+/* study */
+.topbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.btn{background:transparent;border:1px solid rgba(201,169,110,0.22);color:var(--dim);padding:6px 13px;border-radius:4px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:'Lato',sans-serif;transition:all .2s;}
+.btn.active{background:var(--gold2);border-color:var(--gold);color:var(--gold);}
+.togs{display:flex;gap:7px;margin-bottom:13px;justify-content:center;flex-wrap:wrap;}
+.rstrip{background:rgba(201,169,110,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:5px;padding:7px 13px;margin-bottom:14px;display:flex;align-items:center;gap:8px;font-size:10px;color:var(--dim);}
+/* verse */
+.vc{background:var(--surface);border:1px solid rgba(201,169,110,0.1);border-radius:8px;padding:16px;margin-bottom:12px;transition:all .3s;animation:fu .4s both;}
+.vc.playing{background:rgba(201,169,110,0.07);border-color:rgba(201,169,110,0.5);}
+.vc.mem{background:rgba(201,169,110,0.04);border-color:rgba(201,169,110,0.28);}
+.vctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.vleft{display:flex;align-items:center;gap:8px;}
+.vnum{width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:rgba(201,169,110,0.1);border-radius:50%;font-size:9px;color:var(--gold);}
+.plbl{font-size:9px;color:var(--gold);animation:pulse 1.2s ease-in-out infinite;}
+.star{background:none;border:none;cursor:pointer;font-size:16px;color:rgba(201,169,110,0.2);transition:color .2s;padding:0;}
+.star.on{color:var(--gold);}
+.var{font-family:'Amiri',serif;font-size:22px;text-align:right;direction:rtl;line-height:2;color:#f5ead6;margin:0 0 8px;}
+.vtr{font-size:11px;color:#7a6a52;font-style:italic;margin:0 0 4px;line-height:1.6;}
+.vfr{font-size:12px;color:#b8a888;margin:0;line-height:1.6;border-top:1px solid rgba(201,169,110,0.08);padding-top:7px;}
+/* tajweed */
+.ibox{background:rgba(201,169,110,0.04);border:1px solid rgba(201,169,110,0.14);border-radius:7px;padding:13px 15px;margin-bottom:16px;font-size:12px;color:var(--dim);line-height:1.75;}
+.ibox strong{color:var(--gold);}
+.tc{background:var(--surface);border:1px solid rgba(201,169,110,0.1);border-radius:6px;padding:12px 15px;margin-bottom:8px;animation:fu .4s both;}
+.th{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.tname{font-size:13px;letter-spacing:.5px;}
+.tar{font-family:'Amiri',serif;font-size:19px;direction:rtl;}
+.tdesc{font-size:11px;color:var(--dim);line-height:1.65;}
+/* quiz */
+.qwrap{max-width:500px;margin:0 auto;}
+.qcard{background:var(--surface);border:1px solid rgba(201,169,110,0.2);border-radius:10px;padding:24px;}
+.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.qlbl{font-size:10px;color:var(--faint);letter-spacing:3px;text-transform:uppercase;}
+.qq{text-align:center;margin-bottom:20px;}
+.qqsub{font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;}
+.qar{font-family:'Amiri',serif;font-size:24px;direction:rtl;color:#f5ead6;line-height:1.9;}
+.qtxt{font-size:14px;color:var(--text);line-height:1.7;}
+.revbtn{width:100%;background:rgba(201,169,110,0.05);border:1px dashed rgba(201,169,110,0.3);color:var(--dim);padding:12px;border-radius:6px;cursor:pointer;font-size:12px;margin-bottom:10px;font-family:'Lato',sans-serif;}
+.abox{background:rgba(201,169,110,0.05);border:1px solid rgba(201,169,110,0.18);border-radius:6px;padding:14px;margin-bottom:10px;text-align:center;}
+.atxt{font-size:13px;color:#b8a888;line-height:1.6;}
+.aar{font-family:'Amiri',serif;font-size:21px;direction:rtl;color:#f5ead6;line-height:1.9;}
+.atr{font-size:11px;color:#7a6a52;font-style:italic;margin-top:5px;}
+.qbtns{display:flex;gap:10px;margin-top:14px;justify-content:center;}
+.bok{background:rgba(76,175,80,0.13);border:1px solid var(--green);color:var(--green);padding:8px 20px;border-radius:4px;cursor:pointer;font-size:12px;font-family:'Lato',sans-serif;}
+.brt{background:var(--gold2);border:1px solid rgba(201,169,110,0.4);color:var(--gold);padding:8px 20px;border-radius:4px;cursor:pointer;font-size:12px;font-family:'Lato',sans-serif;}
+.qres{text-align:center;padding:14px 0;animation:fu .3s both;}
+.qemo{font-size:28px;margin-bottom:5px;}
+.rok{color:var(--green);font-size:13px;}
+.rrt{color:var(--gold);font-size:13px;}
+.nxtbtn{background:var(--gold2);border:1px solid var(--gold);color:var(--gold);padding:8px 20px;border-radius:4px;cursor:pointer;font-size:12px;letter-spacing:2px;margin-top:12px;font-family:'Lato',sans-serif;}
+/* progress */
+.slbl{text-align:center;font-size:10px;color:var(--faint);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;}
+.cwrap{text-align:center;margin-bottom:24px;}
+.csub{color:var(--dim);font-size:11px;margin-top:5px;}
+.ps{background:var(--surface);border:1px solid rgba(201,169,110,0.1);border-radius:6px;padding:11px 14px;margin-bottom:7px;}
+.psr{display:flex;justify-content:space-between;margin-bottom:5px;}
+.psn{font-size:13px;}
+.psc{font-size:11px;color:var(--gold);}
+.psc.done{color:var(--green);}
+.pb2{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;}
+.pf2{height:100%;border-radius:2px;transition:width .6s;}
+.rbtn{display:block;margin:20px auto 0;background:none;border:1px solid rgba(255,80,80,0.2);color:rgba(255,80,80,0.35);padding:7px 16px;border-radius:4px;cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Lato',sans-serif;}
+/* search */
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-inp{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(201,169,110,0.2);border-radius:6px;padding:9px 14px 9px 36px;color:var(--text);font-size:13px;font-family:'Lato',sans-serif;outline:none;}
+.search-inp::placeholder{color:var(--faint);}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:13px;pointer-events:none;}
+@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.spin{animation:spin 1s linear infinite;display:inline-block;font-size:10px;}
+.sec{display:none;}.sec.active{display:block;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+<header>
+  <div class="basmala">﷽</div>
+  <h1>Juz' Amma — Mémorisation du Coran</h1>
+  <div class="badges">
+    <span class="badge">🎙 الشيخ المنشاوي · Murattal · Hafs</span>
+    <span class="badge g" id="sbadge">🔥 0 jours · 0% mémorisé</span>
+  </div>
+</header>
+<nav>
+  <button class="nb active" onclick="showSec('browse')">☾ Sourates</button>
+  <button class="nb" onclick="showSec('tajweed')">◌ Tajweed</button>
+  <button class="nb" onclick="showSec('progress')">◈ Progrès</button>
+</nav>
+
+<div id="sec-browse" class="sec active">
+  <div id="surah-list"></div>
+  <div id="study-view" style="display:none"></div>
+</div>
+
+<div id="sec-tajweed" class="sec">
+  <p class="slbl">Règles de Tajweed · رواية حفص عن عاصم</p>
+  <div class="ibox">Le <strong>Tajweed</strong> (تجويد) désigne les règles de récitation codifiées pour préserver la prononciation exacte transmise par le Prophète ﷺ. La <strong>riwāya Hafs ʿan ʿĀṣim</strong> est la lecture la plus répandue dans le monde musulman.</div>
+  <div id="tajweed-list"></div>
+  <div class="ibox" style="margin-top:16px">💡 <strong>Pratique</strong> — Utilisez ▶ sur chaque verset pour entendre les règles appliquées par le Sheikh Al-Minshawy. Le mode 🔁 Répéter boucle un verset pour mémoriser la mélodie.</div>
+</div>
+
+<div id="sec-quiz" class="sec">
+  <div class="qwrap">
+    <button class="btn" onclick="stopQuiz()" style="margin-bottom:20px">← Arrêter</button>
+    <div class="qcard" id="quiz-card"></div>
+  </div>
+</div>
+
+<div id="sec-progress" class="sec">
+  <p class="slbl">Tableau de bord</p>
+  <div class="cwrap">
+    <svg width="130" height="130" viewBox="0 0 130 130">
+      <circle cx="65" cy="65" r="55" fill="none" stroke="rgba(201,169,110,0.1)" stroke-width="7"/>
+      <circle id="pcircle" cx="65" cy="65" r="55" fill="none" stroke="#c9a96e" stroke-width="7"
+        stroke-dasharray="345.4" stroke-dashoffset="345.4" stroke-linecap="round" transform="rotate(-90 65 65)"
+        style="transition:stroke-dashoffset 1.2s ease"/>
+      <text x="65" y="61" text-anchor="middle" fill="#c9a96e" font-size="22" font-family="Georgia" id="ppct">0%</text>
+      <text x="65" y="77" text-anchor="middle" fill="#4a3a28" font-size="9" font-family="Georgia">mémorisé</text>
+    </svg>
+    <p class="csub" id="psub">0/0 versets · 0 jours 🔥</p>
+  </div>
+  <div id="prog-surahs"></div>
+  <button class="rbtn" onclick="resetAll()">Réinitialiser</button>
+</div>
+</div>
+
+<script>
+// ── AUDIO ──
+const RID = "Minshawy_Murattal_128kbps";
+const aurl = (s,v) => `https://everyayah.com/data/${RID}/${String(s).padStart(3,'0')}${String(v).padStart(3,'0')}.mp3`;
+let aud=null, pkey=null, loopV=false;
+function stopAudio(){if(aud){aud.pause();aud.src='';aud=null;}pkey=null;updBtns();}
+function playV(sid,vid,onEnd){
+  stopAudio(); pkey=`${sid}:${vid}`;
+  aud=new Audio(aurl(sid,vid)); aud.loop=loopV;
+  aud.addEventListener('ended',()=>{if(!loopV){pkey=null;updBtns();if(onEnd)onEnd();}});
+  aud.addEventListener('error',()=>{pkey=null;updBtns();});
+  aud.play().catch(()=>{pkey=null;updBtns();});
+  updBtns();
+}
+function togglePlayV(sid,vid){
+  const k=`${sid}:${vid}`;
+  if(pkey===k){stopAudio();return;}
+  const vs=VERSES[sid]; const idx=vs?vs.findIndex(v=>v.id===vid):-1;
+  const ne=(vs&&idx>=0&&idx<vs.length-1)?()=>playV(sid,vs[idx+1].id,null):null;
+  playV(sid,vid,ne);
+}
+function playSurah(sid){
+  const vs=VERSES[sid]; if(!vs)return;
+  const seq=i=>{if(i>=vs.length)return; playV(sid,vs[i].id,()=>seq(i+1));};
+  seq(0);
+}
+function togglePlaySurah(sid){
+  const vs=VERSES[sid]; if(!vs)return;
+  const any=vs.some(v=>pkey===`${sid}:${v.id}`);
+  if(any){stopAudio();renderList();return;}
+  const seq=i=>{if(i>=vs.length){renderList();return;} playV(sid,vs[i].id,()=>{seq(i+1);renderList();});renderList();};
+  seq(0);
+}
+function updBtns(){
+  document.querySelectorAll('[data-pk]').forEach(b=>{
+    const on=b.dataset.pk===pkey;
+    b.classList.toggle('active',on);
+    b.textContent=on?'⏸':'▶';
+  });
+  document.querySelectorAll('[data-plbl]').forEach(l=>{
+    l.style.display=l.dataset.plbl===pkey?'inline':'none';
+  });
+  document.querySelectorAll('[data-vc]').forEach(c=>{
+    c.classList.toggle('playing',c.dataset.vc===pkey);
+  });
+  // update study play btn
+  const sb=document.getElementById('splaybtn');
+  if(sb&&curSurah){
+    const vs=VERSES[curSurah.id]||[];
+    const any=vs.some(v=>pkey===`${curSurah.id}:${v.id}`);
+    sb.textContent=any?'⏹ Stop':'▶ Sourate';
+    sb.classList.toggle('active',any);
+  }
+}
+
+// ── DATA ──
+const SURAHS=[
+  {id:78,name:"An-Naba",arabic:"النبأ",verses:40,meaning:"La Nouvelle"},
+  {id:79,name:"An-Nazi'at",arabic:"النازعات",verses:46,meaning:"Les Anges qui arrachent"},
+  {id:80,name:"Abasa",arabic:"عبس",verses:42,meaning:"Il a froncé"},
+  {id:81,name:"At-Takwir",arabic:"التكوير",verses:29,meaning:"L'Enroulement"},
+  {id:82,name:"Al-Infitar",arabic:"الانفطار",verses:19,meaning:"L'Éclatement"},
+  {id:83,name:"Al-Mutaffifin",arabic:"المطففين",verses:36,meaning:"Les Fraudeurs"},
+  {id:84,name:"Al-Inshiqaq",arabic:"الانشقاق",verses:25,meaning:"La Fissure"},
+  {id:85,name:"Al-Buruj",arabic:"البروج",verses:22,meaning:"Les Constellations"},
+  {id:86,name:"At-Tariq",arabic:"الطارق",verses:17,meaning:"L'Astre nocturne"},
+  {id:87,name:"Al-A'la",arabic:"الأعلى",verses:19,meaning:"Le Très-Haut"},
+  {id:88,name:"Al-Ghashiya",arabic:"الغاشية",verses:26,meaning:"L'Enveloppante"},
+  {id:89,name:"Al-Fajr",arabic:"الفجر",verses:30,meaning:"L'Aube"},
+  {id:90,name:"Al-Balad",arabic:"البلد",verses:20,meaning:"La Cité"},
+  {id:91,name:"Ash-Shams",arabic:"الشمس",verses:15,meaning:"Le Soleil"},
+  {id:92,name:"Al-Layl",arabic:"الليل",verses:21,meaning:"La Nuit"},
+  {id:93,name:"Ad-Duha",arabic:"الضحى",verses:11,meaning:"La Matinée"},
+  {id:94,name:"Ash-Sharh",arabic:"الشرح",verses:8,meaning:"L'Ouverture"},
+  {id:95,name:"At-Tin",arabic:"التين",verses:8,meaning:"Le Figuier"},
+  {id:96,name:"Al-Alaq",arabic:"العلق",verses:19,meaning:"L'Adhérence"},
+  {id:97,name:"Al-Qadr",arabic:"القدر",verses:5,meaning:"La Nuit du Destin"},
+  {id:98,name:"Al-Bayyina",arabic:"البينة",verses:8,meaning:"La Preuve"},
+  {id:99,name:"Az-Zalzala",arabic:"الزلزلة",verses:8,meaning:"Le Séisme"},
+  {id:100,name:"Al-Adiyat",arabic:"العاديات",verses:11,meaning:"Les Coursiers"},
+  {id:101,name:"Al-Qari'a",arabic:"القارعة",verses:11,meaning:"Le Fracas"},
+  {id:102,name:"At-Takathur",arabic:"التكاثر",verses:8,meaning:"La Course aux richesses"},
+  {id:103,name:"Al-Asr",arabic:"العصر",verses:3,meaning:"Le Temps"},
+  {id:104,name:"Al-Humaza",arabic:"الهمزة",verses:9,meaning:"Le Calomniateur"},
+  {id:105,name:"Al-Fil",arabic:"الفيل",verses:5,meaning:"L'Éléphant"},
+  {id:106,name:"Quraysh",arabic:"قريش",verses:4,meaning:"Quraysh"},
+  {id:107,name:"Al-Ma'un",arabic:"الماعون",verses:7,meaning:"L'Ustensile"},
+  {id:108,name:"Al-Kawthar",arabic:"الكوثر",verses:3,meaning:"L'Abondance"},
+  {id:109,name:"Al-Kafirun",arabic:"الكافرون",verses:6,meaning:"Les Infidèles"},
+  {id:110,name:"An-Nasr",arabic:"النصر",verses:3,meaning:"Le Secours"},
+  {id:111,name:"Al-Masad",arabic:"المسد",verses:5,meaning:"La Fibre"},
+  {id:112,name:"Al-Ikhlas",arabic:"الإخلاص",verses:4,meaning:"La Sincérité"},
+  {id:113,name:"Al-Falaq",arabic:"الفلق",verses:5,meaning:"L'Aube"},
+  {id:114,name:"An-Nas",arabic:"الناس",verses:6,meaning:"L'Humanité"},
+  {id:1,name:"Al-Fatiha",arabic:"الفاتحة",verses:7,meaning:"L'Ouverture"},
+];
+
+const VERSES={
+  103:[
+    {id:1,ar:"وَالْعَصْرِ",tr:"Wa l-'aṣr",fr:"Par le Temps"},
+    {id:2,ar:"إِنَّ الْإِنسَانَ لَفِي خُسْرٍ",tr:"Inna l-insāna lafī khusr",fr:"L'homme est certes en perdition"},
+    {id:3,ar:"إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ",tr:"Illā lladhīna āmanū wa 'amilū ṣ-ṣāliḥāti wa tawāṣaw bi-l-ḥaqqi wa tawāṣaw bi-ṣ-ṣabr",fr:"Sauf ceux qui croient, font de bonnes œuvres, s'enjoignent mutuellement la vérité et s'enjoignent mutuellement la patience"},
+  ],
+  108:[
+    {id:1,ar:"إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",tr:"Innā aʿṭaynāka l-kawthar",fr:"Nous t'avons accordé l'abondance"},
+    {id:2,ar:"فَصَلِّ لِرَبِّكَ وَانْحَرْ",tr:"Faṣalli li-rabbika wa nḥar",fr:"Prie donc ton Seigneur et sacrifie"},
+    {id:3,ar:"إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ",tr:"Inna shāniʾaka huwa l-abtar",fr:"C'est ton ennemi qui est sans descendance"},
+  ],
+  109:[
+    {id:1,ar:"قُلْ يَا أَيُّهَا الْكَافِرُونَ",tr:"Qul yā ayyuhā l-kāfirūn",fr:"Dis : Ô vous les infidèles !"},
+    {id:2,ar:"لَا أَعْبُدُ مَا تَعْبُدُونَ",tr:"Lā aʿbudu mā taʿbudūn",fr:"Je n'adore pas ce que vous adorez"},
+    {id:3,ar:"وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ",tr:"Wa lā antum ʿābidūna mā aʿbud",fr:"Et vous n'adorez pas ce que j'adore"},
+    {id:4,ar:"وَلَا أَنَا عَابِدٌ مَّا عَبَدتُّمْ",tr:"Wa lā anā ʿābidun mā ʿabadtum",fr:"Et je n'adore pas ce que vous avez adoré"},
+    {id:5,ar:"وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ",tr:"Wa lā antum ʿābidūna mā aʿbud",fr:"Et vous n'adorez pas ce que j'adore"},
+    {id:6,ar:"لَكُمْ دِينُكُمْ وَلِيَ دِينِ",tr:"Lakum dīnukum wa liya dīn",fr:"À vous votre religion, à moi la mienne"},
+  ],
+  110:[
+    {id:1,ar:"إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ",tr:"Idhā jāʾa naṣru llāhi wa l-fatḥ",fr:"Quand vient le secours d'Allah et la victoire"},
+    {id:2,ar:"وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا",tr:"Wa raʾayta n-nāsa yadkhulūna fī dīni llāhi afwājā",fr:"Et que tu vois les gens entrer en foule dans la religion d'Allah"},
+    {id:3,ar:"فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ إِنَّهُ كَانَ تَوَّابًا",tr:"Fasabbiḥ biḥamdi rabbika wa staghfirh innahu kāna tawwābā",fr:"Alors célèbre la gloire de ton Seigneur et implore Son pardon, car Il est Celui qui accepte le repentir"},
+  ],
+  111:[
+    {id:1,ar:"تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ",tr:"Tabbat yadā abī lahabin wa tabb",fr:"Périssent les deux mains d'Abu Lahab ! Et il a péri !"},
+    {id:2,ar:"مَا أَغْنَىٰ عَنْهُ مَالُهُ وَمَا كَسَبَ",tr:"Mā aghnā ʿanhu māluhu wa mā kasab",fr:"Sa fortune et ce qu'il a acquis ne lui ont servi à rien"},
+    {id:3,ar:"سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ",tr:"Sayaṣlā nāran dhāta lahab",fr:"Il brûlera dans un feu plein de flammes"},
+    {id:4,ar:"وَامْرَأَتُهُ حَمَّالَةَ الْحَطَبِ",tr:"Wa mraʾatuhu ḥammālata l-ḥaṭab",fr:"Ainsi que sa femme, porteuse de bois"},
+    {id:5,ar:"فِي جِيدِهَا حَبْلٌ مِّن مَّسَدٍ",tr:"Fī jīdihā ḥablun min masad",fr:"À son cou, une corde de fibres"},
+  ],
+  112:[
+    {id:1,ar:"قُلْ هُوَ اللَّهُ أَحَدٌ",tr:"Qul huwa llāhu aḥad",fr:"Dis : Lui, Allah est Un"},
+    {id:2,ar:"اللَّهُ الصَّمَدُ",tr:"Allāhu ṣ-ṣamad",fr:"Allah, l'Absolu"},
+    {id:3,ar:"لَمْ يَلِدْ وَلَمْ يُولَدْ",tr:"Lam yalid wa lam yūlad",fr:"Il n'a pas engendré et n'a pas été engendré"},
+    {id:4,ar:"وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",tr:"Wa lam yakun lahū kufuwan aḥad",fr:"Et nul n'est égal à Lui"},
+  ],
+  113:[
+    {id:1,ar:"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",tr:"Qul aʿūdhu bi-rabbi l-falaq",fr:"Dis : Je cherche refuge auprès du Seigneur de l'aube"},
+    {id:2,ar:"مِن شَرِّ مَا خَلَقَ",tr:"Min sharri mā khalaq",fr:"Contre le mal de ce qu'Il a créé"},
+    {id:3,ar:"وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",tr:"Wa min sharri ghāsiqin idhā waqab",fr:"Contre le mal de la nuit obscure quand elle s'étend"},
+    {id:4,ar:"وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ",tr:"Wa min sharri n-naffāthāti fī l-ʿuqad",fr:"Contre le mal de celles qui soufflent sur les nœuds"},
+    {id:5,ar:"وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",tr:"Wa min sharri ḥāsidin idhā ḥasad",fr:"Contre le mal de l'envieux quand il envie"},
+  ],
+  114:[
+    {id:1,ar:"قُلْ أَعُوذُ بِرَبِّ النَّاسِ",tr:"Qul aʿūdhu bi-rabbi n-nās",fr:"Dis : Je cherche refuge auprès du Seigneur des hommes"},
+    {id:2,ar:"مَلِكِ النَّاسِ",tr:"Maliki n-nās",fr:"Roi des hommes"},
+    {id:3,ar:"إِلَٰهِ النَّاسِ",tr:"Ilāhi n-nās",fr:"Dieu des hommes"},
+    {id:4,ar:"مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ",tr:"Min sharri l-waswāsi l-khannās",fr:"Contre le mal du souffleur furtif"},
+    {id:5,ar:"الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ",tr:"Alladhī yuwaswisu fī ṣudūri n-nās",fr:"Qui souffle le mal dans les cœurs des hommes"},
+    {id:6,ar:"مِنَ الْجِنَّةِ وَالنَّاسِ",tr:"Mina l-jinnati wa n-nās",fr:"Qu'il soit djinn ou être humain"},
+  ],
+  1:[
+    {id:1,ar:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",tr:"Bismi llāhi r-raḥmāni r-raḥīm",fr:"Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux"},
+    {id:2,ar:"الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",tr:"Al-ḥamdu li-llāhi rabbi l-ʿālamīn",fr:"Louange à Allah, Seigneur de l'univers"},
+    {id:3,ar:"الرَّحْمَٰنِ الرَّحِيمِ",tr:"Ar-raḥmāni r-raḥīm",fr:"Le Tout Miséricordieux, le Très Miséricordieux"},
+    {id:4,ar:"مَالِكِ يَوْمِ الدِّينِ",tr:"Māliki yawmi d-dīn",fr:"Maître du Jour de la Rétribution"},
+    {id:5,ar:"إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",tr:"Iyyāka naʿbudu wa iyyāka nastaʿīn",fr:"C'est Toi que nous adorons, et c'est Toi dont nous implorons le secours"},
+    {id:6,ar:"اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",tr:"Ihdinā ṣ-ṣirāṭa l-mustaqīm",fr:"Guide-nous dans le droit chemin"},
+    {id:7,ar:"صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",tr:"Ṣirāṭa lladhīna anʿamta ʿalayhim ghayri l-maghḍūbi ʿalayhim wa lā ḍ-ḍāllīn",fr:"Le chemin de ceux que Tu as comblés de bienfaits, non de ceux qui ont encouru Ta colère, ni des égarés"},
+  ],
+  97:[
+    {id:1,ar:"إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ",tr:"Innā anzalnāhu fī laylati l-qadr",fr:"Nous l'avons certes révélé lors de la Nuit du Destin"},
+    {id:2,ar:"وَمَا أَدْرَاكَ مَا لَيْلَةُ الْقَدْرِ",tr:"Wa mā adrāka mā laylatu l-qadr",fr:"Et qui te dira ce qu'est la Nuit du Destin ?"},
+    {id:3,ar:"لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ",tr:"Laylatu l-qadri khayrun min alfi shahr",fr:"La Nuit du Destin est meilleure que mille mois"},
+    {id:4,ar:"تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍ",tr:"Tanazzalu l-malāʾikatu wa r-rūḥu fīhā bi-idhni rabbihim min kulli amr",fr:"Les anges et l'Esprit y descendent, avec la permission de leur Seigneur, pour tout ordre"},
+    {id:5,ar:"سَلَامٌ هِيَ حَتَّىٰ مَطْلَعِ الْفَجْرِ",tr:"Salāmun hiya ḥattā maṭlaʿi l-fajr",fr:"C'est une paix, jusqu'à l'apparition de l'aube"},
+  ],
+  99:[
+    {id:1,ar:"إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا",tr:"Idhā zulzilati l-arḍu zilzālahā",fr:"Quand la terre sera secouée d'un violent séisme"},
+    {id:2,ar:"وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا",tr:"Wa akhrajati l-arḍu athqālahā",fr:"Et que la terre aura sorti ses fardeaux"},
+    {id:3,ar:"وَقَالَ الْإِنسَانُ مَا لَهَا",tr:"Wa qāla l-insānu mā lahā",fr:"Et que l'homme dira : Qu'a-t-elle ?"},
+    {id:4,ar:"يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا",tr:"Yawmaʾidhin tuḥaddithu akhbārahā",fr:"Ce jour-là, elle racontera ses nouvelles"},
+    {id:5,ar:"بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا",tr:"Bi-anna rabbaka awḥā lahā",fr:"Car ton Seigneur le lui aura inspiré"},
+    {id:6,ar:"يَوْمَئِذٍ يَصْدُرُ النَّاسُ أَشْتَاتًا لِّيُرَوْا أَعْمَالَهُمْ",tr:"Yawmaʾidhin yaṣduru n-nāsu ashtātan li-yuraw aʿmālahum",fr:"Ce jour-là, les gens sortiront en groupes dispersés pour se voir montrer leurs œuvres"},
+    {id:7,ar:"فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ",tr:"Faman yaʿmal mithqāla dharratin khayran yarah",fr:"Quiconque fait le poids d'un atome de bien le verra"},
+    {id:8,ar:"وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ",tr:"Wa man yaʿmal mithqāla dharratin sharran yarah",fr:"Et quiconque fait le poids d'un atome de mal le verra"},
+  ],
+  105:[
+    {id:1,ar:"أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ",tr:"Alam tara kayfa faʿala rabbuka bi-aṣḥābi l-fīl",fr:"N'as-tu pas vu comment ton Seigneur a agi avec les gens de l'Éléphant ?"},
+    {id:2,ar:"أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ",tr:"Alam yajʿal kaydahum fī taḍlīl",fr:"N'a-t-Il pas rendu vain leur stratagème ?"},
+    {id:3,ar:"وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ",tr:"Wa arsala ʿalayhim ṭayran abābīl",fr:"Il lança contre eux des oiseaux par volées"},
+    {id:4,ar:"تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ",tr:"Tarmīhim biḥijāratin min sijjīl",fr:"Qui les lapidaient de pierres d'argile cuite"},
+    {id:5,ar:"فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ",tr:"Fajaʿalahum kaʿaṣfin maʾkūl",fr:"Et Il les rendit semblables à une paille dévorée"},
+  ],
+  106:[
+    {id:1,ar:"لِإِيلَافِ قُرَيْشٍ",tr:"Li-īlāfi quraysh",fr:"Pour la cohésion des Qurayshites"},
+    {id:2,ar:"إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ",tr:"Īlāfihim riḥlata sh-shitāʾi wa ṣ-ṣayf",fr:"Leur cohésion dans les voyages d'hiver et d'été"},
+    {id:3,ar:"فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ",tr:"Falyaʿbudū rabba hādhā l-bayt",fr:"Qu'ils adorent donc le Seigneur de cette Maison"},
+    {id:4,ar:"الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ",tr:"Alladhī aṭʿamahum min jūʿin wa āmanahum min khawf",fr:"Qui les a nourris contre la faim et préservés de la crainte"},
+  ],
+  107:[
+    {id:1,ar:"أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ",tr:"Araʾayta lladhī yukadhdhibu bi-d-dīn",fr:"As-tu vu celui qui traite de mensonge la Religion ?"},
+    {id:2,ar:"فَذَٰلِكَ الَّذِي يَدُعُّ الْيَتِيمَ",tr:"Fadhālika lladhī yadūʿʿu l-yatīm",fr:"C'est celui qui repousse l'orphelin"},
+    {id:3,ar:"وَلَا يَحُضُّ عَلَىٰ طَعَامِ الْمِسْكِينِ",tr:"Wa lā yaḥuḍḍu ʿalā ṭaʿāmi l-miskīn",fr:"Et qui n'encourage pas à nourrir le pauvre"},
+    {id:4,ar:"فَوَيْلٌ لِّلْمُصَلِّينَ",tr:"Fa-waylun li-l-muṣallīn",fr:"Malheur donc à ceux qui font la prière"},
+    {id:5,ar:"الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ",tr:"Alladhīna hum ʿan ṣalātihim sāhūn",fr:"Qui sont distraits dans leurs prières"},
+    {id:6,ar:"الَّذِينَ هُمْ يُرَاءُونَ",tr:"Alladhīna hum yurāʾūn",fr:"Qui font de l'ostentation"},
+    {id:7,ar:"وَيَمْنَعُونَ الْمَاعُونَ",tr:"Wa yamnaʿūna l-māʿūn",fr:"Et refusent l'ustensile de première nécessité"},
+  ],
+  94:[
+    {id:1,ar:"أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ",tr:"Alam nashraḥ laka ṣadrak",fr:"N'avons-Nous pas ouvert ta poitrine ?"},
+    {id:2,ar:"وَوَضَعْنَا عَنكَ وِزْرَكَ",tr:"Wa waḍaʿnā ʿanka wizrak",fr:"Et n'avons-Nous pas ôté de toi ton fardeau"},
+    {id:3,ar:"الَّذِي أَنقَضَ ظَهْرَكَ",tr:"Alladhī anqaḍa ẓahrak",fr:"Qui alourdissait ton dos ?"},
+    {id:4,ar:"وَرَفَعْنَا لَكَ ذِكْرَكَ",tr:"Wa rafaʿnā laka dhikrak",fr:"Et n'avons-Nous pas élevé pour toi ta renommée ?"},
+    {id:5,ar:"فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",tr:"Fa-inna maʿa l-ʿusri yusrā",fr:"Certes, avec la difficulté vient la facilité"},
+    {id:6,ar:"إِنَّ مَعَ الْعُسْرِ يُسْرًا",tr:"Inna maʿa l-ʿusri yusrā",fr:"Oui, avec la difficulté vient la facilité"},
+    {id:7,ar:"فَإِذَا فَرَغْتَ فَانصَبْ",tr:"Fa-idhā faraghta fanṣab",fr:"Alors quand tu te libères, travaille dur"},
+    {id:8,ar:"وَإِلَىٰ رَبِّكَ فَارْغَب",tr:"Wa ilā rabbika farghab",fr:"Et vers ton Seigneur, tourne-toi avec ardeur"},
+  ],
+  93:[
+    {id:1,ar:"وَالضُّحَىٰ",tr:"Wa ḍ-ḍuḥā",fr:"Par la matinée"},
+    {id:2,ar:"وَاللَّيْلِ إِذَا سَجَىٰ",tr:"Wa l-layli idhā sajā",fr:"Et par la nuit quand elle s'étend"},
+    {id:3,ar:"مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",tr:"Mā waddaʿaka rabbuka wa mā qalā",fr:"Ton Seigneur ne t'a pas abandonné et ne te hait pas"},
+    {id:4,ar:"وَلَلْآخِرَةُ خَيْرٌ لَّكَ مِنَ الْأُولَىٰ",tr:"Wa la-l-ākhiratu khayrun laka mina l-ūlā",fr:"Et certes la vie future sera meilleure pour toi que la première"},
+    {id:5,ar:"وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ",tr:"Wa la-sawfa yuʿṭīka rabbuka fa-tarḍā",fr:"Et ton Seigneur te donnera et tu seras satisfait"},
+    {id:6,ar:"أَلَمْ يَجِدْكَ يَتِيمًا فَآوَىٰ",tr:"Alam yajidka yatīman fa-āwā",fr:"Ne t'a-t-Il pas trouvé orphelin et t'a-t-Il pas recueilli ?"},
+    {id:7,ar:"وَوَجَدَكَ ضَالًّا فَهَدَىٰ",tr:"Wa wajadaka ḍāllan fa-hadā",fr:"Et Il t'a trouvé égaré et t'a guidé"},
+    {id:8,ar:"وَوَجَدَكَ عَائِلًا فَأَغْنَىٰ",tr:"Wa wajadaka ʿāʾilan fa-aghnā",fr:"Et Il t'a trouvé pauvre et t'a enrichi"},
+    {id:9,ar:"فَأَمَّا الْيَتِيمَ فَلَا تَقْهَرْ",tr:"Fa-ammā l-yatīma fa-lā taqhar",fr:"Quant à l'orphelin, ne l'écrase donc pas"},
+    {id:10,ar:"وَأَمَّا السَّائِلَ فَلَا تَنْهَرْ",tr:"Wa ammā s-sāʾila fa-lā tanhar",fr:"Et quant au mendiant, ne le repousse pas"},
+    {id:11,ar:"وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ",tr:"Wa ammā bi-niʿmati rabbika fa-ḥaddith",fr:"Et quant au bienfait de ton Seigneur, proclame-le"},
+  ],
+  91:[
+    {id:1,ar:"وَالشَّمْسِ وَضُحَاهَا",tr:"Wa sh-shamsi wa ḍuḥāhā",fr:"Par le soleil et sa clarté matinale"},
+    {id:2,ar:"وَالْقَمَرِ إِذَا تَلَاهَا",tr:"Wa l-qamari idhā talāhā",fr:"Par la lune quand elle suit le soleil"},
+    {id:3,ar:"وَالنَّهَارِ إِذَا جَلَّاهَا",tr:"Wa n-nahāri idhā jallāhā",fr:"Par le jour quand il la découvre"},
+    {id:4,ar:"وَاللَّيْلِ إِذَا يَغْشَاهَا",tr:"Wa l-layli idhā yaghshāhā",fr:"Par la nuit quand elle l'enveloppe"},
+    {id:5,ar:"وَالسَّمَاءِ وَمَا بَنَاهَا",tr:"Wa s-samāʾi wa mā banāhā",fr:"Par le ciel et Celui qui l'a édifié"},
+    {id:6,ar:"وَالْأَرْضِ وَمَا طَحَاهَا",tr:"Wa l-arḍi wa mā ṭaḥāhā",fr:"Par la terre et Celui qui l'a étendue"},
+    {id:7,ar:"وَنَفْسٍ وَمَا سَوَّاهَا",tr:"Wa nafsin wa mā sawwāhā",fr:"Par l'âme et Celui qui l'a harmonieusement formée"},
+    {id:8,ar:"فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَاهَا",tr:"Fa-alhamahā fujūrahā wa taqwāhā",fr:"Et lui a inspiré son immoralité et sa piété"},
+    {id:9,ar:"قَدْ أَفْلَحَ مَن زَكَّاهَا",tr:"Qad aflaḥa man zakkāhā",fr:"A réussi celui qui la purifie"},
+    {id:10,ar:"وَقَدْ خَابَ مَن دَسَّاهَا",tr:"Wa qad khāba man dassāhā",fr:"Et a échoué celui qui la corrompt"},
+    {id:11,ar:"كَذَّبَتْ ثَمُودُ بِطَغْوَاهَا",tr:"Kadhdhabat thamūdu biṭaghwāhā",fr:"Les Thamoud ont démenti par leur tyrannie"},
+    {id:12,ar:"إِذِ انبَعَثَ أَشْقَاهَا",tr:"Idhi nbaʿatha ashqāhā",fr:"Quand le plus misérable d'entre eux se dressa"},
+    {id:13,ar:"فَقَالَ لَهُمْ رَسُولُ اللَّهِ نَاقَةَ اللَّهِ وَسُقْيَاهَا",tr:"Fa-qāla lahum rasūlu llāhi nāqata llāhi wa suqyāhā",fr:"Le messager d'Allah leur dit : C'est la chamelle d'Allah, laissez-la boire"},
+    {id:14,ar:"فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنبِهِمْ فَسَوَّاهَا",tr:"Fakadhdhabūhu faʿaqarūhā fadamdama ʿalayhim rabbuhum bidhanbihim fa-sawwāhā",fr:"Ils le démentirent et la tuèrent. Leur Seigneur les écrasa à cause de leur péché et les rasa"},
+    {id:15,ar:"وَلَا يَخَافُ عُقْبَاهَا",tr:"Wa lā yakhāfu ʿuqbāhā",fr:"Et Il ne craint pas les conséquences"},
+  ],
+};
+
+const TAJWEED=[
+  {name:"Idghām",ar:"إدغام",color:"#4fc3f7",desc:"Fusion de deux lettres — la première est absorbée dans la seconde (6 lettres : ي ر م ل و ن)"},
+  {name:"Ikhfāʾ",ar:"إخفاء",color:"#a5d6a7",desc:"Prononciation nasale cachée (ghunna) sur 15 lettres après nūn sākina ou tanwīn"},
+  {name:"Iqlab",ar:"إقلاب",color:"#ffb74d",desc:"Le nūn se transforme en mīm avec ghunna devant la lettre bā (ب)"},
+  {name:"Iẓhār",ar:"إظهار",color:"#ce93d8",desc:"Prononciation claire du nūn sākina devant les 6 lettres gutturales (أ ه ع ح غ خ)"},
+  {name:"Ghunna",ar:"غنة",color:"#f48fb1",desc:"Nasalisation de 2 temps sur le nūn et le mīm mushaddad (portant une shadda)"},
+  {name:"Madd",ar:"مد",color:"#80cbc4",desc:"Allongement vocalique — Madd ṭabīʿī (2 temps), Madd munfaṣil (4-5), Madd muttaṣil (4-6)"},
+  {name:"Qalqala",ar:"قلقلة",color:"#ffcc80",desc:"Écho/vibration sur les lettres ق ط ب ج د à l'état sākin ou en waqf (pause)"},
+  {name:"Tafkhīm",ar:"تفخيم",color:"#ef9a9a",desc:"Prononciation emphatique (voix grave) des lettres ص ض ط ظ et du rāʾ dans certains contextes"},
+  {name:"Tarqīq",ar:"ترقيق",color:"#b39ddb",desc:"Prononciation fine (voix légère) du rāʾ et du lām dans le nom d'Allah selon le contexte"},
+  {name:"Waqf",ar:"وقف",color:"#bcaaa4",desc:"Règles de pause : waqf tāmm (complet), waqf kāfī (suffisant), waqf qabīḥ (déconseillé)"},
+];
+
+// ── STATE ──
+let mem=JSON.parse(localStorage.getItem('qm_m')||'{}');
+let streak=parseInt(localStorage.getItem('qm_s')||'0');
+let curSurah=null, showTr=true, showFr=true, loopVerse=false;
+let qSurah=null,qVerse=null,qType=null,qFlash=false,qDone=false;
+let searchQ='';
+
+function saveMem(){localStorage.setItem('qm_m',JSON.stringify(mem));updBadge();}
+function isMem(s,v){return!!mem[`${s}:${v}`];}
+function toggleMem(s,v){const k=`${s}:${v}`;mem[k]=!mem[k];saveMem();
+  const st=document.querySelector(`[data-star="${k}"]`);if(st)st.classList.toggle('on',mem[k]);
+  const vc=document.querySelector(`[data-vc="${k}"]`);if(vc)vc.classList.toggle('mem',mem[k]);
+}
+function totalM(){return Object.values(mem).filter(Boolean).length;}
+function totalVv(){return Object.values(VERSES).flat().length;}
+function pctV(){return totalVv()>0?Math.round((totalM()/totalVv())*100):0;}
+function updBadge(){document.getElementById('sbadge').textContent=`🔥 ${streak} jours · ${pctV()}% mémorisé`;}
+function resetAll(){if(!confirm('Réinitialiser ?'))return;mem={};streak=0;localStorage.clear();updBadge();renderProgress();}
+
+function showSec(n){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+n).classList.add('active');
+  const map={browse:0,tajweed:1,progress:2};
+  document.querySelectorAll('.nb')[map[n]]?.classList.add('active');
+  if(n==='browse'){curSurah=null;renderBrowse();}
+  if(n==='progress')renderProgress();
+  stopAudio();
+}
+
+// ── BROWSE ──
+function renderBrowse(){
+  const list=document.getElementById('surah-list');
+  const study=document.getElementById('study-view');
+  if(curSurah){list.style.display='none';study.style.display='block';renderStudy();}
+  else{study.style.display='none';list.style.display='block';renderList();}
+}
+
+function renderList(){
+  const list=document.getElementById('surah-list');
+  const filt=searchQ.toLowerCase();
+  const filtered=SURAHS.filter(s=>
+    !filt||s.name.toLowerCase().includes(filt)||s.meaning.toLowerCase().includes(filt)||String(s.id).includes(filt)
+  );
+  list.innerHTML=`
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-inp" type="text" placeholder="Rechercher une sourate…" value="${searchQ}"
+        oninput="searchQ=this.value;renderList()" />
+    </div>
+  `+filtered.map(s=>{
+    const vs=VERSES[s.id], has=!!vs;
+    const mc=has?vs.filter(v=>isMem(s.id,v.id)).length:0;
+    const pc=has?Math.round((mc/vs.length)*100):0;
+    const any=has&&vs.some(v=>pkey===`${s.id}:${v.id}`);
+    return `<div class="si${any?' playing':''}${!has?' na':''}" onclick="${has?`openSurah(${s.id})`:''}" style="${has?'':'cursor:default'}">
+      <div class="snum">${s.id}</div>
+      <div class="sinfo">
+        <div class="sname">${s.name}</div>
+        <div class="ssub">${s.meaning} · ${s.verses} versets</div>
+      </div>
+      ${has?`
+        <div class="pmini${pc===100?' done':''}">
+          <span>${mc}/${vs.length}${pc===100?' ✓':''}</span>
+          <div class="pb"><div class="pf${pc===100?' done':''}" style="width:${pc}%"></div></div>
+        </div>
+        <button class="plbtn${any?' active':''}" data-pk="${s.id}:play"
+          onclick="event.stopPropagation();togglePlaySurah(${s.id})">${any?'⏹':'▶'}</button>
+      `:''}
+      <div class="sar">${s.arabic}</div>
+    </div>`;
+  }).join('');
+}
+
+function openSurah(id){curSurah=SURAHS.find(s=>s.id===id);renderBrowse();}
+
+function renderStudy(){
+  const s=curSurah, vs=VERSES[s.id]||[];
+  const any=vs.some(v=>pkey===`${s.id}:${v.id}`);
+  document.getElementById('study-view').innerHTML=`
+    <div class="topbar">
+      <button class="btn" onclick="backList()">← Retour</button>
+      <div style="flex:1;text-align:center">
+        <span style="font-family:'Amiri',serif;font-size:19px;color:var(--gold)">${s.arabic}</span>
+        <span style="font-size:11px;color:var(--faint);margin-left:8px">${s.name}</span>
+      </div>
+      <button class="btn${any?' active':''}" id="splaybtn" onclick="toggleStudySurah(${s.id})">${any?'⏹ Stop':'▶ Sourate'}</button>
+      <button class="btn active" onclick="startQuiz(${s.id})">Quiz ◈</button>
+    </div>
+    <div class="togs">
+      <button class="btn${showTr?' active':''}" id="tog-tr" onclick="togTr()">Translitération</button>
+      <button class="btn${showFr?' active':''}" id="tog-fr" onclick="togFr()">Traduction</button>
+      <button class="btn${loopVerse?' active':''}" id="tog-lp" onclick="togLoop()">🔁 Répéter</button>
+    </div>
+    <div class="rstrip">
+      <span>🎙</span><span>الشيخ المنشاوي — Sheikh Al-Minshawy</span>
+      <span style="margin-left:auto;color:var(--faint)">Murattal · Hafs</span>
+    </div>
+    <div id="vcont">${vs.map((v,i)=>vcard(s.id,v,i)).join('')}</div>
+  `;
+}
+
+function vcard(sid,v,delay){
+  const k=`${sid}:${v.id}`, m=isMem(sid,v.id), pl=pkey===k;
+  return `<div class="vc${pl?' playing':''}${m?' mem':''}" data-vc="${k}" style="animation-delay:${delay*.04}s">
+    <div class="vctrl">
+      <div class="vleft">
+        <div class="vnum">${v.id}</div>
+        <button class="plbtn lg${pl?' active':''}" data-pk="${k}" onclick="togglePlayV(${sid},${v.id})">${pl?'⏸':'▶'}</button>
+        <span class="plbl" data-plbl="${k}" style="display:${pl?'inline':'none'}">♪</span>
+      </div>
+      <button class="star${m?' on':''}" data-star="${k}" onclick="toggleMem(${sid},${v.id})">★</button>
+    </div>
+    <div class="var">${v.ar}</div>
+    ${showTr?`<div class="vtr">${v.tr}</div>`:''}
+    ${showFr?`<div class="vfr">${v.fr}</div>`:''}
+  </div>`;
+}
+
+function toggleStudySurah(sid){
+  const vs=VERSES[sid];if(!vs)return;
+  const any=vs.some(v=>pkey===`${sid}:${v.id}`);
+  if(any){stopAudio();const b=document.getElementById('splaybtn');if(b){b.textContent='▶ Sourate';b.classList.remove('active');}return;}
+  const seq=i=>{if(i>=vs.length)return; playV(sid,vs[i].id,()=>seq(i+1)); updStudyBtn(sid);};
+  seq(0);
+}
+function updStudyBtn(sid){
+  const b=document.getElementById('splaybtn');if(!b)return;
+  const vs=VERSES[sid]||[]; const any=vs.some(v=>pkey===`${sid}:${v.id}`);
+  b.textContent=any?'⏹ Stop':'▶ Sourate'; b.classList.toggle('active',any);
+}
+function togTr(){showTr=!showTr;document.getElementById('tog-tr')?.classList.toggle('active',showTr);refreshV();}
+function togFr(){showFr=!showFr;document.getElementById('tog-fr')?.classList.toggle('active',showFr);refreshV();}
+function togLoop(){loopVerse=!loopVerse;if(aud)aud.loop=loopVerse;document.getElementById('tog-lp')?.classList.toggle('active',loopVerse);}
+function refreshV(){if(!curSurah)return;const vs=VERSES[curSurah.id]||[];const c=document.getElementById('vcont');if(c)c.innerHTML=vs.map((v,i)=>vcard(curSurah.id,v,i)).join('');}
+function backList(){curSurah=null;stopAudio();renderBrowse();}
+
+// ── QUIZ ──
+function startQuiz(sid){
+  const s=SURAHS.find(x=>x.id===sid), vs=VERSES[sid]; if(!vs)return;
+  qSurah=s; qVerse=vs[Math.floor(Math.random()*vs.length)];
+  qType=Math.random()>.5?'arabic':'translation'; qFlash=false; qDone=false;
+  stopAudio();
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-quiz').classList.add('active');
+  renderQuiz();
+}
+function renderQuiz(){
+  const k=`${qSurah.id}:${qVerse.id}`, pl=pkey===k;
+  document.getElementById('quiz-card').innerHTML=`
+    <div class="qhead">
+      <span class="qlbl">${qSurah.name} · Quiz</span>
+      <button class="plbtn lg${pl?' active':''}" data-pk="${k}" onclick="togglePlayV(${qSurah.id},${qVerse.id})">${pl?'⏸':'▶'}</button>
+    </div>
+    <div class="qq">
+      ${qType==='arabic'
+        ?`<div class="qqsub">TRADUIS CE VERSET</div><div class="qar">${qVerse.ar}</div>`
+        :`<div class="qqsub">QUEL VERSET CORRESPOND À :</div><div class="qtxt">${qVerse.fr}</div>`
+      }
+    </div>
+    ${!qFlash&&!qDone?`<button class="revbtn" onclick="revealQ()">Voir la réponse</button>`:''}
+    ${qFlash&&!qDone?`
+      <div class="abox">
+        ${qType==='arabic'
+          ?`<div class="atxt">${qVerse.fr}</div>`
+          :`<div class="aar">${qVerse.ar}</div>${showTr?`<div class="atr">${qVerse.tr}</div>`:''}`
+        }
+        <div class="qbtns">
+          <button class="bok" onclick="qOk()">✓ Je savais</button>
+          <button class="brt" onclick="qRetry()">À revoir</button>
+        </div>
+      </div>`:''}
+    ${qDone?`<div class="qres" id="qresbox"></div>`:''}
+  `;
+  if(qDone)renderQRes();
+}
+function revealQ(){qFlash=true;renderQuiz();}
+function qOk(){qDone=true;streak++;localStorage.setItem('qm_s',streak);mem[`${qSurah.id}:${qVerse.id}`]=true;saveMem();renderQuiz();}
+function qRetry(){qDone=true;renderQuiz();}
+function renderQRes(){
+  const box=document.getElementById('qresbox');if(!box)return;
+  const ok=mem[`${qSurah.id}:${qVerse.id}`];
+  box.innerHTML=`
+    <div class="qemo">${ok?'✨':'📖'}</div>
+    <div class="${ok?'rok':'rrt'}">${ok?`Macha Allah ! Série : ${streak} 🔥`:'À retravailler — écoutez la récitation'}</div>
+    <br><button class="nxtbtn" onclick="startQuiz(${qSurah.id})">Verset suivant →</button>
+  `;
+}
+function stopQuiz(){stopAudio();showSec('browse');document.querySelectorAll('.nb')[0].classList.add('active');}
+
+// ── TAJWEED ──
+function renderTajweed(){
+  document.getElementById('tajweed-list').innerHTML=TAJWEED.map((r,i)=>`
+    <div class="tc" style="border-left:3px solid ${r.color};animation-delay:${i*.04}s">
+      <div class="th">
+        <span class="tname" style="color:${r.color}">${r.name}</span>
+        <span class="tar" style="color:${r.color}">${r.ar}</span>
+      </div>
+      <div class="tdesc">${r.desc}</div>
+    </div>`).join('');
+}
+
+// ── PROGRESS ──
+function renderProgress(){
+  const p=pctV(), circ=2*Math.PI*55, off=circ*(1-p/100);
+  const c=document.getElementById('pcircle');if(c)c.style.strokeDashoffset=off;
+  const pe=document.getElementById('ppct');if(pe)pe.textContent=p+'%';
+  const ps=document.getElementById('psub');if(ps)ps.textContent=`${totalM()}/${totalVv()} versets · ${streak} jours 🔥`;
+  const pg=document.getElementById('prog-surahs');if(!pg)return;
+  pg.innerHTML=SURAHS.filter(s=>VERSES[s.id]).map(s=>{
+    const vs=VERSES[s.id],mc=vs.filter(v=>isMem(s.id,v.id)).length,p2=Math.round((mc/vs.length)*100);
+    return `<div class="ps">
+      <div class="psr"><span class="psn">${s.name}</span><span class="psc${p2===100?' done':''}">${mc}/${vs.length}${p2===100?' ✓':''}</span></div>
+      <div class="pb2"><div class="pf2" style="width:${p2}%;background:${p2===100?'var(--green)':'var(--gold)'}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── INIT ──
+updBadge(); renderList(); renderTajweed();
+</script>
+</body>
+</html>
