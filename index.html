@@ -941,7 +941,7 @@ function renderList(){
     const mc=has?vs.filter(v=>isMem(s.id,v.id)).length:0;
     const pc=has?Math.round((mc/vs.length)*100):0;
     const any=has&&vs.some(v=>pkey===`${s.id}:${v.id}`);
-    return `<div class="si${any?' playing':''}${!has?' na':''}" onclick="${has?`openSurah(${s.id})`:''}" style="${has?'':'cursor:default'}">
+    return `<div class="si${any?' playing':''}${!has?' na':''}" onclick="${has?'openSurah('+s.id+')':''}" style="${has?'':'cursor:default'}">
       <div class="snum">${s.id}</div>
       <div class="sinfo"><div class="sname">${s.name}</div><div class="ssub">${s.meaning} · ${s.verses} versets</div></div>
       ${has?`<div class="pmini${pc===100?' done':''}"><span>${mc}/${vs.length}${pc===100?' ✓':''}</span><div class="pb"><div class="pf${pc===100?' done':''}" style="width:${pc}%"></div></div></div>
