@@ -978,3 +978,88 @@ function vcard(sid,v,delay){
     <div class="vctrl">
       <div class="vleft">
         <div class="vnum">${v.id}</div>
+        <button class="plbtn lg${pl?' active':''}" data-pk="${k}" onclick="togglePlayV(${sid},${v.id})">${pl?'⏸':'▶'}</button>
+        <span class="plbl" data-plbl="${k}" style="display:${pl?'inline':'none'}">♪</span>
+      </div>
+      <button class="star${m?' on':''}" data-star="${k}" onclick="toggleMem(${sid},${v.id})">★</button>
+    </div>
+    <div class="var">${v.ar}</div>
+    ${showTr?`<div class="vtr">${v.tr}</div>`:''}
+    ${showFr?`<div class="vfr">${v.fr}</div>`:''}
+  </div>`;
+}
+
+function toggleStudySurah(sid){
+  const vs=VERSES[sid];if(!vs)return;
+  const any=vs.some(v=>pkey===`${sid}:${v.id}`);
+  if(any){stopAudio();const b=document.getElementById('splaybtn');if(b){b.textContent='▶ Sourate';b.classList.remove('active');}return;}
+  const seq=i=>{if(i>=vs.length)return;playV(sid,vs[i].id,()=>seq(i+1));updStudyBtn(sid);};
+  seq(0);
+}
+function updStudyBtn(sid){const b=document.getElementById('splaybtn');if(!b)return;const vs=VERSES[sid]||[];const any=vs.some(v=>pkey===`${sid}:${v.id}`);b.textContent=any?'⏹ Stop':'▶ Sourate';b.classList.toggle('active',any);}
+function togTr(){showTr=!showTr;document.getElementById('tog-tr')?.classList.toggle('active',showTr);refreshV();}
+function togFr(){showFr=!showFr;document.getElementById('tog-fr')?.classList.toggle('active',showFr);refreshV();}
+function togLoop(){loopVerse=!loopVerse;if(aud)aud.loop=loopVerse;document.getElementById('tog-lp')?.classList.toggle('active',loopVerse);}
+function refreshV(){if(!curSurah)return;const vs=VERSES[curSurah.id]||[];const c=document.getElementById('vcont');if(c)c.innerHTML=vs.map((v,i)=>vcard(curSurah.id,v,i)).join('');}
+function backList(){curSurah=null;stopAudio();renderBrowse();}
+
+function startQuiz(sid){
+  const s=SURAHS.find(x=>x.id===sid),vs=VERSES[sid];if(!vs)return;
+  qSurah=s;qVerse=vs[Math.floor(Math.random()*vs.length)];
+  qType=Math.random()>.5?'arabic':'translation';qFlash=false;qDone=false;
+  stopAudio();
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-quiz').classList.add('active');
+  renderQuiz();
+}
+function renderQuiz(){
+  const k=`${qSurah.id}:${qVerse.id}`,pl=pkey===k;
+  document.getElementById('quiz-card').innerHTML=`
+    <div class="qhead"><span class="qlbl">${qSurah.name} · Quiz</span>
+    <button class="plbtn lg${pl?' active':''}" data-pk="${k}" onclick="togglePlayV(${qSurah.id},${qVerse.id})">${pl?'⏸':'▶'}</button></div>
+    <div class="qq">${qType==='arabic'
+      ?`<div class="qqsub">TRADUIS CE VERSET</div><div class="qar">${qVerse.ar}</div>`
+      :`<div class="qqsub">QUEL VERSET CORRESPOND À :</div><div class="qtxt">${qVerse.fr}</div>`}</div>
+    ${!qFlash&&!qDone?`<button class="revbtn" onclick="revealQ()">Voir la réponse</button>`:''}
+    ${qFlash&&!qDone?`<div class="abox">${qType==='arabic'?`<div class="atxt">${qVerse.fr}</div>`:`<div class="aar">${qVerse.ar}</div>${showTr?`<div class="atr">${qVerse.tr}</div>`:''}`}
+    <div class="qbtns"><button class="bok" onclick="qOk()">✓ Je savais</button><button class="brt" onclick="qRetry()">À revoir</button></div></div>`:''}
+    ${qDone?`<div class="qres" id="qresbox"></div>`:''}`;
+  if(qDone)renderQRes();
+}
+function revealQ(){qFlash=true;renderQuiz();}
+function qOk(){qDone=true;streak++;localStorage.setItem('qm_s',streak);mem[`${qSurah.id}:${qVerse.id}`]=true;saveMem();renderQuiz();}
+function qRetry(){qDone=true;renderQuiz();}
+function renderQRes(){
+  const box=document.getElementById('qresbox');if(!box)return;
+  const ok=mem[`${qSurah.id}:${qVerse.id}`];
+  box.innerHTML=`<div class="qemo">${ok?'✨':'📖'}</div><div class="${ok?'rok':'rrt'}">${ok?`Macha Allah ! Série : ${streak} 🔥`:'À retravailler — écoutez la récitation'}</div><br>
+  <button class="nxtbtn" onclick="startQuiz(${qSurah.id})">Verset suivant →</button>`;
+}
+function stopQuiz(){stopAudio();showSec('browse');document.querySelectorAll('.nb')[0].classList.add('active');}
+
+function renderTajweed(){
+  document.getElementById('tajweed-list').innerHTML=TAJWEED.map((r,i)=>`
+    <div class="tc" style="border-left:3px solid ${r.color};animation-delay:${i*.04}s">
+      <div class="th"><span class="tname" style="color:${r.color}">${r.name}</span><span class="tar2" style="color:${r.color}">${r.ar}</span></div>
+      <div class="tdesc">${r.desc}</div>
+    </div>`).join('');
+}
+
+function renderProgress(){
+  const p=pctV(),circ=2*Math.PI*55,off=circ*(1-p/100);
+  const c=document.getElementById('pcircle');if(c)c.style.strokeDashoffset=off;
+  const pe=document.getElementById('ppct');if(pe)pe.textContent=p+'%';
+  const ps=document.getElementById('psub');if(ps)ps.textContent=`${totalM()}/${totalVv()} versets · ${streak} jours 🔥`;
+  const pg=document.getElementById('prog-surahs');if(!pg)return;
+  pg.innerHTML=SURAHS.filter(s=>VERSES[s.id]).map(s=>{
+    const vs=VERSES[s.id],mc=vs.filter(v=>isMem(s.id,v.id)).length,p2=Math.round((mc/vs.length)*100);
+    return `<div class="ps"><div class="psr"><span class="psn">${s.name}</span><span class="psc${p2===100?' done':''}">${mc}/${vs.length}${p2===100?' ✓':''}</span></div>
+    <div class="pb2"><div class="pf2" style="width:${p2}%;background:${p2===100?'var(--green)':'var(--gold)'}"></div></div></div>`;
+  }).join('');
+}
+
+updBadge();renderList();renderTajweed();
+</script>
+</body>
+</html>
